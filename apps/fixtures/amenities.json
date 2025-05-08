@@ -1,0 +1,142 @@
+[
+  {
+    "model": "apps.amenity",
+    "pk": 1,
+    "fields": {
+      "name": "Elevator"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 2,
+    "fields": {
+      "name": "Security"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 3,
+    "fields": {
+      "name": "Internet"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 4,
+    "fields": {
+      "name": "Playground"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 5,
+    "fields": {
+      "name": "Sauna"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 6,
+    "fields": {
+      "name": "Sewerage"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 7,
+    "fields": {
+      "name": "Refrigerator"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 8,
+    "fields": {
+      "name": "Telephone line"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 9,
+    "fields": {
+      "name": "Separate bathroom"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 10,
+    "fields": {
+      "name": "Video surveillance"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 11,
+    "fields": {
+      "name": "Swimming pool"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 12,
+    "fields": {
+      "name": "Water supply"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 13,
+    "fields": {
+      "name": "Microwave"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 14,
+    "fields": {
+      "name": "Parking space"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 15,
+    "fields": {
+      "name": "Air conditioner"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 16,
+    "fields": {
+      "name": "TV"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 17,
+    "fields": {
+      "name": "Washing machine"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 18,
+    "fields": {
+      "name": "Satellite/Cable TV"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 19,
+    "fields": {
+      "name": "Furniture"
+    }
+  },
+  {
+    "model": "apps.amenity",
+    "pk": 20,
+    "fields": {
+      "name": "Gas supply"
+    }
+  }
+]
