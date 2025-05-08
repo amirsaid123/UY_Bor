@@ -218,7 +218,7 @@ class Tariff(models.Model):
     duration_days = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=10, choices=Property.Status.choices, default=Property.Status.ACTIVE)
-
+    label = models.CharField(max_length=10, choices=Property.Label.choices, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
