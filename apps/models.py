@@ -1,7 +1,8 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
-from django.db import models
-from django.db.models import CASCADE
+from django.db.models import CASCADE, CharField, ImageField, EmailField, DecimalField, DateTimeField, BooleanField, \
+    TextChoices, Model, SlugField, ForeignKey, TextField, URLField, PositiveIntegerField, ManyToManyField, DateField, \
+    IntegerField
 from django.utils.text import slugify
 
 
@@ -24,18 +25,18 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=15, unique=True)
-    avatar = models.ImageField(upload_to='avatars', blank=True)
-    organization = models.CharField(max_length=255, blank=True)
-    email = models.EmailField(unique=True, blank=True, null=True)
-    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    role = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
+    first_name = CharField(max_length=255)
+    last_name = CharField(max_length=255)
+    phone_number = CharField(max_length=15, unique=True)
+    avatar = ImageField(upload_to='avatars', blank=True)
+    organization = CharField(max_length=255, blank=True)
+    email = EmailField(unique=True, blank=True, null=True)
+    balance = DecimalField(max_digits=10, decimal_places=2, default=0)
+    role = CharField(max_length=255, blank=True, null=True)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+    is_active = BooleanField(default=False)
+    is_staff = BooleanField(default=False)
 
     objects = UserManager()
 
@@ -46,108 +47,108 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.phone_number
 
 
-class Property(models.Model):
-    class Material(models.TextChoices):
+class Property(Model):
+    class Material(TextChoices):
         BRICK = 'brick', 'Brick'
         MONOLITHIC = 'monolithic', 'Monolithic'
         CONCRETE_BLOCKS = 'concrete_blocks', 'Concrete Blocks'
         CONCRETE = 'concrete', 'Concrete'
         ANOTHER = 'another', 'Another'
 
-    class Renovation(models.TextChoices):
+    class Renovation(TextChoices):
         AUTHOR = 'author', 'Author design'
         EURO = 'euro', 'Euro renovation'
         MID = 'mid', 'Medium renovation'
         REQUIRED = 'required', 'Needs renovation'
         BLACK_PLASTER = 'black_plaster', 'Bare walls (Black plaster)'
 
-    class Type(models.TextChoices):
+    class Type(TextChoices):
         SALE = 'sale', 'Sale'
         RENT = 'rent', 'Rent'
 
-    class Label(models.TextChoices):
+    class Label(TextChoices):
         VIP = 'vip', 'VIP'
         PREMIUM = 'premium', 'Premium'
         URGENT = 'urgent', 'Urgent'
 
-    class ResidentialType(models.TextChoices):
+    class ResidentialType(TextChoices):
         FREE_LAYOUT = 'free_layout', 'Free layout'
         ON_TIME = 'on_time', 'On time'
         FINISHED = 'finished', 'Finished'
 
-    class Status(models.TextChoices):
+    class Status(TextChoices):
         ACTIVE = 'active', 'Active'
         INACTIVE = 'inactive', 'Inactive'
         MODERATION = 'moderation', 'Moderation'
         CANCELED = 'canceled', 'Canceled'
 
-    name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    building_material = models.CharField(max_length=100, choices=Material.choices)
-    renovation_needed = models.CharField(max_length=100, choices=Renovation.choices)
-    area = models.DecimalField(max_digits=10, decimal_places=2)
-    room = models.PositiveIntegerField()
-    floor = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=0)
-    description = models.TextField(null=True, blank=True)
-    amenities = models.ManyToManyField('apps.Amenity', related_name='properties', blank=True)
-    type = models.CharField(max_length=10, choices=Type.choices)
-    category = models.ForeignKey('apps.Category', on_delete=models.CASCADE, related_name='properties')
-    label = models.CharField(max_length=10, choices=Label.choices, null=True, blank=True)
+    name = CharField(max_length=255)
+    address = CharField(max_length=255)
+    building_material = CharField(max_length=100, choices=Material.choices)
+    renovation_needed = CharField(max_length=100, choices=Renovation.choices)
+    area = DecimalField(max_digits=10, decimal_places=2)
+    room = PositiveIntegerField()
+    floor = PositiveIntegerField()
+    price = DecimalField(max_digits=10, decimal_places=0)
+    description = TextField(null=True, blank=True)
+    amenities = ManyToManyField('apps.Amenity', related_name='properties', blank=True)
+    type = CharField(max_length=10, choices=Type.choices)
+    category = ForeignKey('apps.Category', on_delete=CASCADE, related_name='properties')
+    label = CharField(max_length=10, choices=Label.choices, null=True, blank=True)
 
-    residential_complex = models.ForeignKey('apps.ResidentialComplex', on_delete=CASCADE, null=True, blank=True)
-    residential_type = models.CharField(max_length=100, choices=ResidentialType.choices, null=True, blank=True)
-    commissioning_date = models.DateField(null=True, blank=True)
+    residential_complex = ForeignKey('apps.ResidentialComplex', on_delete=CASCADE, null=True, blank=True)
+    residential_type = CharField(max_length=100, choices=ResidentialType.choices, null=True, blank=True)
+    commissioning_date = DateField(null=True, blank=True)
 
-    views = models.IntegerField(default=0)
-    saves = models.IntegerField(default=0)
+    views = IntegerField(default=0)
+    saves = IntegerField(default=0)
 
-    city = models.ForeignKey('apps.City', on_delete=models.CASCADE, related_name='properties')
-    region = models.ForeignKey('apps.Region', on_delete=models.CASCADE, related_name='properties')
-    metro = models.ForeignKey('apps.Metro', on_delete=models.CASCADE, related_name='properties', null=True, blank=True)
-    district = models.ForeignKey('apps.District', on_delete=models.CASCADE, related_name='properties', null=True,
+    city = ForeignKey('apps.City', on_delete=CASCADE, related_name='properties')
+    region = ForeignKey('apps.Region', on_delete=CASCADE, related_name='properties')
+    metro = ForeignKey('apps.Metro', on_delete=CASCADE, related_name='properties', null=True, blank=True)
+    district = ForeignKey('apps.District', on_delete=CASCADE, related_name='properties', null=True,
                                  blank=True)
-    country = models.ForeignKey('apps.Country', on_delete=models.CASCADE, related_name='properties', null=True,
+    country = ForeignKey('apps.Country', on_delete=CASCADE, related_name='properties', null=True,
                                 blank=True)
 
-    user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='properties')
+    user = ForeignKey('apps.User', on_delete=CASCADE, related_name='properties')
 
-    latitude = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
+    latitude = DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
+    longitude = DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
 
-    status = models.CharField(max_length=10, choices=Status.choices, default=Status.ACTIVE)
+    status = CharField(max_length=10, choices=Status.choices, default=Status.ACTIVE)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
 
-class Wishlist(models.Model):
-    property = models.ForeignKey('apps.Property', on_delete=models.CASCADE, related_name='wishlist')
-    user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='wishlist')
+class Wishlist(Model):
+    property = ForeignKey('apps.Property', on_delete=CASCADE, related_name='wishlist')
+    user = ForeignKey('apps.User', on_delete=CASCADE, related_name='wishlist')
 
 
-class Message(models.Model):
-    user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='messages')
-    from_user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='sent_messages', null=True,
+class Message(Model):
+    user = ForeignKey('apps.User', on_delete=CASCADE, related_name='messages')
+    from_user = ForeignKey('apps.User', on_delete=CASCADE, related_name='sent_messages', null=True,
                                   blank=True)
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    text = TextField()
+    created_at = DateTimeField(auto_now_add=True)
 
 
-class Transaction(models.Model):
-    user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='transactions')
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+class Transaction(Model):
+    user = ForeignKey('apps.User', on_delete=CASCADE, related_name='transactions')
+    amount = DecimalField(max_digits=10, decimal_places=2)
+    created_at = DateTimeField(auto_now_add=True)
 
 
-class Blog(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to='blogs', blank=True)
+class Blog(Model):
+    title = CharField(max_length=255)
+    slug = SlugField(unique=True, blank=True)
+    description = TextField(null=True, blank=True)
+    image = ImageField(upload_to='blogs', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -158,15 +159,15 @@ class Blog(models.Model):
         return self.title
 
 
-class Video(models.Model):
-    video = models.URLField()
-    property = models.ForeignKey('apps.Property', on_delete=models.CASCADE, related_name='videos')
+class Video(Model):
+    video = URLField()
+    property = ForeignKey('apps.Property', on_delete=CASCADE, related_name='videos')
 
 
-class ResidentialComplex(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+class ResidentialComplex(Model):
+    name = CharField(max_length=255)
+    slug = SlugField(unique=True, blank=True)
+    description = TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -177,19 +178,19 @@ class ResidentialComplex(models.Model):
         return self.name
 
 
-class Amenity(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+class Amenity(Model):
+    name = CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True, blank=True)
-    parent = models.ForeignKey(
+class Category(Model):
+    name = CharField(max_length=100)
+    slug = SlugField(unique=True, blank=True)
+    parent = ForeignKey(
         'self',
-        on_delete=models.CASCADE,
+        on_delete=CASCADE,
         null=True,
         blank=True,
         related_name='subcategories'
@@ -204,30 +205,30 @@ class Category(models.Model):
         return self.name
 
 
-class Image(models.Model):
-    image = models.ImageField(upload_to='images', blank=True)
-    property = models.ForeignKey('apps.Property', on_delete=models.CASCADE, related_name='images')
+class Image(Model):
+    image = ImageField(upload_to='images', blank=True)
+    property = ForeignKey('apps.Property', on_delete=CASCADE, related_name='images')
 
     def __str__(self):
         return f"Image for {self.property.name}"
 
 
-class Tariff(models.Model):
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    duration_days = models.PositiveIntegerField()
-    description = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=10, choices=Property.Status.choices, default=Property.Status.ACTIVE)
-    label = models.CharField(max_length=10, choices=Property.Label.choices, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+class Tariff(Model):
+    name = CharField(max_length=100)
+    price = DecimalField(max_digits=10, decimal_places=2)
+    duration_days = PositiveIntegerField()
+    description = TextField(blank=True, null=True)
+    status = CharField(max_length=10, choices=Property.Status.choices, default=Property.Status.ACTIVE)
+    label = CharField(max_length=10, choices=Property.Label.choices, null=True, blank=True)
+    created_at = DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.name} - {self.price} UZS for {self.duration_days} days"
 
-class StaticPage(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
-    content = models.TextField()
+class StaticPage(Model):
+    title = CharField(max_length=255)
+    slug = SlugField(unique=True, blank=True)
+    content = TextField()
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -238,9 +239,9 @@ class StaticPage(models.Model):
         return self.title
 
 
-class Metro(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
+class Metro(Model):
+    name = CharField(max_length=255)
+    slug = SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -251,9 +252,9 @@ class Metro(models.Model):
         return self.name
 
 
-class Country(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
+class Country(Model):
+    name = CharField(max_length=255)
+    slug = SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -264,10 +265,10 @@ class Country(models.Model):
         return self.name
 
 
-class Region(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
-    country = models.ForeignKey('apps.Country', on_delete=models.CASCADE, related_name='regions')
+class Region(Model):
+    name = CharField(max_length=255)
+    slug = SlugField(unique=True, blank=True)
+    country = ForeignKey('apps.Country', on_delete=CASCADE, related_name='regions')
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -278,10 +279,10 @@ class Region(models.Model):
         return self.name
 
 
-class City(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
-    region = models.ForeignKey('apps.Region', on_delete=models.CASCADE, related_name='cities')
+class City(Model):
+    name = CharField(max_length=255)
+    slug = SlugField(unique=True, blank=True)
+    region = ForeignKey('apps.Region', on_delete=CASCADE, related_name='cities')
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -292,10 +293,10 @@ class City(models.Model):
         return self.name
 
 
-class District(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
-    city = models.ForeignKey('apps.City', on_delete=models.CASCADE, related_name='districts')
+class District(Model):
+    name = CharField(max_length=255)
+    slug = SlugField(unique=True, blank=True)
+    city = ForeignKey('apps.City', on_delete=CASCADE, related_name='districts')
 
     def save(self, *args, **kwargs):
         if not self.slug:
