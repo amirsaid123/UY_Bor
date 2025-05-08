@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models import CASCADE
 from django.utils.text import slugify
 
-
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, password=None, **extra_fields):
         if not phone_number:
