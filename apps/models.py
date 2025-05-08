@@ -131,6 +131,8 @@ class Wishlist(models.Model):
 
 class Message(models.Model):
     user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='messages')
+    from_user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='sent_messages', null=True,
+                                  blank=True)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
