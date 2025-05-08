@@ -31,6 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     organization = models.CharField(max_length=255, blank=True)
     email = models.EmailField(unique=True, blank=True, null=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    role = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
@@ -130,6 +131,8 @@ class Wishlist(models.Model):
 
 class Message(models.Model):
     user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='messages')
+    from_user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='sent_messages', null=True,
+                                  blank=True)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -208,6 +211,18 @@ class Image(models.Model):
     def __str__(self):
         return f"Image for {self.property.name}"
 
+
+class Tariff(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    duration_days = models.PositiveIntegerField()
+    description = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=10, choices=Property.Status.choices, default=Property.Status.ACTIVE)
+    label = models.CharField(max_length=10, choices=Property.Label.choices, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.price} UZS for {self.duration_days} days"
 
 class StaticPage(models.Model):
     title = models.CharField(max_length=255)
