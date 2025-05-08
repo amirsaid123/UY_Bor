@@ -36,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    card_number = models.CharField(max_length=16, unique=True, null=True, blank=True)
 
     objects = UserManager()
 
