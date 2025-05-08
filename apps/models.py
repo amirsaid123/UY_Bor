@@ -212,6 +212,18 @@ class Image(models.Model):
         return f"Image for {self.property.name}"
 
 
+class Tariff(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    duration_days = models.PositiveIntegerField()
+    description = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=10, choices=Property.Status.choices, default=Property.Status.ACTIVE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.price} UZS for {self.duration_days} days"
+
 class StaticPage(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
