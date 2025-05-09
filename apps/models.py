@@ -61,6 +61,12 @@ class Property(models.Model):
         REQUIRED = 'required', 'Needs renovation'
         BLACK_PLASTER = 'black_plaster', 'Bare walls (Black plaster)'
 
+    class Repair(models.TextChoices):
+        AUTHOR = 'author', 'Author design'
+        DECORATED = 'decorated', 'Decorated'
+        REQUIRES_DECORATION = 'requires_decoration', 'Requires decoration'
+        WITHOUT_DECORATION = 'without_decoration', 'Without decoration'
+
     class Type(models.TextChoices):
         SALE = 'sale', 'Sale'
         RENT = 'rent', 'Rent'
@@ -94,6 +100,7 @@ class Property(models.Model):
     type = models.CharField(max_length=10, choices=Type.choices)
     category = models.ForeignKey('apps.Category', on_delete=models.CASCADE, related_name='properties')
     label = models.CharField(max_length=10, choices=Label.choices, null=True, blank=True)
+    repair = models.CharField(max_length=100, choices=Repair.choices, null=True, blank=True)
 
     residential_complex = models.ForeignKey('apps.ResidentialComplex', on_delete=CASCADE, null=True, blank=True)
     residential_type = models.CharField(max_length=100, choices=ResidentialType.choices, null=True, blank=True)
