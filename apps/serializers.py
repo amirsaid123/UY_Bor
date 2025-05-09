@@ -70,3 +70,4 @@ class UserMessageSerializer(serializers.ModelSerializer):
 class UserWishlistSerializer(serializers.Serializer):
     user = UserProfileSerializer()
     property = PropertySerializer()
+
