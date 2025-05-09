@@ -2,10 +2,11 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
 from rest_framework.permissions import AllowAny
 from rest_framework.generics import ListAPIView
-from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.Serializers.filter_serializers import SearchFilterSerializer
+from apps.filters import SearchPropertyFilter
 from apps.models import Property
 
 
@@ -109,7 +110,7 @@ class SearchProperty(ListAPIView):
     serializer_class = SearchFilterSerializer
     permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_class = SearchFilter
+    filterset_class = SearchPropertyFilter
     ordering_fields = ['price', 'views', 'created_at']
     ordering = ['-created_at']
 
