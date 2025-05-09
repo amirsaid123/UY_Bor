@@ -1,12 +1,13 @@
 import random
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from .models import PhoneVerification, User
-from .serializers import PhoneNumberSerializer
+from .serializers import PhoneNumberSerializer, UserProfileSerializer
 from .serializers import UserLoginSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @extend_schema(tags=["Authentication"])
@@ -34,6 +35,14 @@ class SendCodeView(CreateAPIView):
 @extend_schema(tags=["Authentication"])
 class UserLoginView(GenericAPIView):
     serializer_class = UserLoginSerializer
+
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+
 
     def validate_code(self, phone_number, code):
         verification = PhoneVerification.objects.filter(phone_number=phone_number).first()
@@ -65,8 +74,18 @@ class UserLoginView(GenericAPIView):
 
         user, created = User.objects.get_or_create(phone_number=phone_number)
 
+        tokens = self.get_tokens_for_user(user)
+
         return Response({
             "message": "User logged in" if not created else "User registered and logged in",
             "user_id": user.id,
-            "phone_number": user.phone_number
+            "phone_number": user.phone_number,
+            "tokens": tokens
         }, status=status.HTTP_200_OK)
+
+@extend_schema(tags=["User"])
+class UserProfileView(RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+
+    def get_object(self):
+        return self.request.user

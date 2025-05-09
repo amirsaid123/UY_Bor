@@ -1,6 +1,7 @@
 import re
-
 from rest_framework import serializers
+from apps.models import User
+
 
 class PhoneNumberSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=15)
@@ -11,6 +12,7 @@ class PhoneNumberSerializer(serializers.Serializer):
             raise serializers.ValidationError("Enter a valid Uzbek phone number starting with +998.")
         return value
 
+
 class UserLoginSerializer(serializers.Serializer):
     phone_number = serializers.CharField()
     code = serializers.CharField()
@@ -20,3 +22,9 @@ class UserLoginSerializer(serializers.Serializer):
         if not re.match(pattern, value):
             raise serializers.ValidationError("Enter a valid Uzbek phone number starting with +998.")
         return value
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'phone_number', 'email', 'avatar', 'role']
