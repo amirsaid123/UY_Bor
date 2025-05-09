@@ -101,7 +101,15 @@ class UserUpdateView(UpdateAPIView):
         return self.request.user
 
 @extend_schema(tags=['User'])
-class UserBalanceView(UpdateAPIView):
+class UserBalanceView(RetrieveAPIView):
+    serializer_class = UserBalanceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+@extend_schema(tags=['User'])
+class UserBalanceUpdateView(UpdateAPIView):
     serializer_class = UserBalanceUpdateSerializer
     permission_classes = [IsAuthenticated]
 

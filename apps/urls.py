@@ -1,6 +1,7 @@
 from django.urls import path
 
-from apps.views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView
+from apps.views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView, \
+    UserBalanceUpdateView
 
 urlpatterns = [
     path('auth/sendcode/', SendCodeView.as_view(), name='user_register'),
@@ -11,4 +12,5 @@ urlpatterns += [
     path('user/profile/', UserProfileView.as_view(), name='user_profile'),
     path('user/profile/update/', UserUpdateView.as_view(), name='user_profile_update'),
     path('user/profile/balance/', UserBalanceView.as_view(), name='user_balance'),
+    path('user/profile/balance/update/', UserBalanceUpdateView.as_view(), name='user_balance_add'),
 ]
