@@ -8,7 +8,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .filters import PropertyFilter
+from .filters import PropertyFilter, WishlistFilter
 from .models import PhoneVerification, User, Message, Wishlist, Property
 from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
     UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer, PropertySerializer
@@ -148,30 +148,6 @@ class UserMessageView(ListAPIView):
         return Message.objects.filter(receiver=self.get_object())
 
 
-@extend_schema(tags=['User'])
-class UserWishlistView(ListAPIView):
-    serializer_class = UserWishlistSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
-
-    def get_queryset(self):
-        return Wishlist.objects.filter(user=self.get_object())
-
-
-@extend_schema(tags=['User'])
-class UserPropertyView(ListAPIView):
-    serializer_class = PropertySerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
-
-    def get_queryset(self):
-        return Property.objects.filter(user=self.get_object())
-
-
 @extend_schema(
     tags=["User"],
     parameters=[
@@ -220,7 +196,7 @@ class UserPropertyView(ListAPIView):
         ),
     ],
 )
-class UserPropertyFilter(ListAPIView):
+class UserPropertyView(ListAPIView):
     serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
@@ -239,6 +215,69 @@ class UserPropertyFilter(ListAPIView):
                 queryset = queryset.order_by('views')
             elif ordering == 'popular':
                 queryset = queryset.order_by('-views')
+            elif ordering == 'newest':
+                queryset = queryset.order_by('-created_at')
+            elif ordering == 'oldest':
+                queryset = queryset.order_by('created_at')
+        return queryset
+
+
+@extend_schema(
+    tags=["User"],
+    parameters=[
+        OpenApiParameter(
+            name="min_price",
+            type=OpenApiTypes.FLOAT,
+            location=OpenApiParameter.QUERY,
+            description="Minimum price of the property",
+        ),
+        OpenApiParameter(
+            name="max_price",
+            type=OpenApiTypes.FLOAT,
+            location=OpenApiParameter.QUERY,
+            description="Maximum price of the property",
+        ),
+        OpenApiParameter(
+            name="type",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            description="Type of the property (exact match)",
+        ),
+        OpenApiParameter(
+            name="category",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            description="Category of the property (case-insensitive contains)",
+        ),
+        OpenApiParameter(
+            name="ordering",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            description="Sort results by: highest_price, lowest_price, less_viewed, popular, newest, oldest",
+            enum=["highest_price", "lowest_price", "less_viewed", "popular", "newest", "oldest"],
+        ),
+    ],
+)
+class UserWishlistView(ListAPIView):
+    serializer_class = UserWishlistSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = WishlistFilter
+    ordering_fields = ['property__price', 'property__view_count', 'created_at']
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        queryset = Wishlist.objects.filter(user=self.request.user)
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering:
+            if ordering == 'highest_price':
+                queryset = queryset.order_by('-property__price')
+            elif ordering == 'lowest_price':
+                queryset = queryset.order_by('property__price')
+            elif ordering == 'less_viewed':
+                queryset = queryset.order_by('property__view_count')
+            elif ordering == 'popular':
+                queryset = queryset.order_by('-property__view_count')
             elif ordering == 'newest':
                 queryset = queryset.order_by('-created_at')
             elif ordering == 'oldest':
