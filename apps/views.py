@@ -1,15 +1,18 @@
 import random
-from drf_spectacular.utils import extend_schema
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, ListAPIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from .filters import PropertyFilter
 from .models import PhoneVerification, User, Message, Wishlist, Property
 from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
     UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer, PropertySerializer
 from .serializers import UserLoginSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @extend_schema(tags=["Authentication"])
@@ -45,7 +48,6 @@ class UserLoginView(GenericAPIView):
             'access': str(refresh.access_token),
         }
 
-
     def validate_code(self, phone_number, code):
         verification = PhoneVerification.objects.filter(phone_number=phone_number).first()
         if not verification:
@@ -64,7 +66,6 @@ class UserLoginView(GenericAPIView):
 
         if not code:
             return Response({"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST)
-
 
         is_valid_phone_number = PhoneVerification.objects.filter(phone_number=phone_number).exists()
         if not is_valid_phone_number:
@@ -85,12 +86,14 @@ class UserLoginView(GenericAPIView):
             "tokens": tokens
         }, status=status.HTTP_200_OK)
 
+
 @extend_schema(tags=["User"])
 class UserProfileView(RetrieveAPIView):
     serializer_class = UserProfileSerializer
 
     def get_object(self):
         return self.request.user
+
 
 @extend_schema(tags=['User'])
 class UserUpdateView(UpdateAPIView):
@@ -100,6 +103,7 @@ class UserUpdateView(UpdateAPIView):
     def get_object(self):
         return self.request.user
 
+
 @extend_schema(tags=['User'])
 class UserBalanceView(RetrieveAPIView):
     serializer_class = UserBalanceSerializer
@@ -107,6 +111,7 @@ class UserBalanceView(RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
 
 @extend_schema(tags=['User'])
 class UserBalanceUpdateView(UpdateAPIView):
@@ -142,6 +147,7 @@ class UserMessageView(ListAPIView):
     def get_queryset(self):
         return Message.objects.filter(receiver=self.get_object())
 
+
 @extend_schema(tags=['User'])
 class UserWishlistView(ListAPIView):
     serializer_class = UserWishlistSerializer
@@ -152,6 +158,7 @@ class UserWishlistView(ListAPIView):
 
     def get_queryset(self):
         return Wishlist.objects.filter(user=self.get_object())
+
 
 @extend_schema(tags=['User'])
 class UserPropertyView(ListAPIView):
@@ -164,3 +171,53 @@ class UserPropertyView(ListAPIView):
     def get_queryset(self):
         return Property.objects.filter(user=self.get_object())
 
+
+@extend_schema(
+    tags=["User"],
+    parameters=[
+        OpenApiParameter(
+            name="min_price",
+            type=OpenApiTypes.FLOAT,
+            location=OpenApiParameter.QUERY,
+            description="Minimum price of the property",
+        ),
+        OpenApiParameter(
+            name="max_price",
+            type=OpenApiTypes.FLOAT,
+            location=OpenApiParameter.QUERY,
+            description="Maximum price of the property",
+        ),
+        OpenApiParameter(
+            name="status",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            description="Status of the property (exact match)",
+        ),
+        OpenApiParameter(
+            name="type",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            description="Type of the property (exact match)",
+        ),
+        OpenApiParameter(
+            name="category",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            description="Category of the property (case-insensitive contains)",
+        ),
+        OpenApiParameter(
+            name="id",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            description="ID of the property (exact match)",
+        ),
+    ],
+)
+class UserPropertyFilter(ListAPIView):
+    serializer_class = PropertySerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PropertyFilter
+
+    def get_queryset(self):
+        return Property.objects.filter(user=self.request.user)

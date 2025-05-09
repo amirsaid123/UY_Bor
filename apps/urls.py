@@ -1,7 +1,7 @@
 from django.urls import path
 
 from apps.views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView, \
-    UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView
+    UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView, UserPropertyFilter
 
 urlpatterns = [
     path('auth/sendcode/', SendCodeView.as_view(), name='user_register'),
@@ -16,4 +16,5 @@ urlpatterns += [
     path('user/profile/messages/', UserMessageView.as_view(), name='user_messages'),
     path('user/profile/wishlist/', UserWishlistView.as_view(), name='user_wishlist'),
     path('user/profile/listings/', UserPropertyView.as_view(), name='user_listings'),
+    path('user/profile/listings/filter/', UserPropertyFilter.as_view(), name='user_listings'),
 ]
