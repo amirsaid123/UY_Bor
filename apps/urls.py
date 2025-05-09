@@ -1,5 +1,5 @@
 from django.urls import path
-from apps.views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView, \
+from apps.Views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView, \
     UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView, UserTariffView, UserTransactionView, \
     UserSendMesageView
 
