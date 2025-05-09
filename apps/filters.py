@@ -31,7 +31,7 @@ from .models import Property
 from django.db.models import Q
 
 
-class SearchFilter(django_filters.FilterSet):
+class SearchPropertyFilter(django_filters.FilterSet):
     # Text-based filters
     search = django_filters.CharFilter(field_name="address", lookup_expr='icontains')
     name = django_filters.CharFilter(field_name="name", lookup_expr='icontains')
