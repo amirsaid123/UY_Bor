@@ -6,7 +6,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import PhoneVerification, User
-from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer
+from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer
 from .serializers import UserLoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -99,3 +99,10 @@ class UserUpdateView(UpdateAPIView):
     def get_object(self):
         return self.request.user
 
+@extend_schema(tags=['User'])
+class UserBalanceView(RetrieveAPIView):
+    serializer_class = UserBalanceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
