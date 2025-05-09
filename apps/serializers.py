@@ -1,6 +1,6 @@
 import re
 from rest_framework import serializers
-from apps.models import User
+from apps.models import User, Message
 
 
 class PhoneNumberSerializer(serializers.Serializer):
@@ -58,3 +58,8 @@ class UserBalanceUpdateSerializer(serializers.Serializer):
         if not re.match(pattern, value):
             raise serializers.ValidationError("Enter a valid 4-digit password.")
         return value
+
+class UserMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = '__all__'

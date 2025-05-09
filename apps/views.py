@@ -1,13 +1,13 @@
 import random
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, ListAPIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import PhoneVerification, User
+from .models import PhoneVerification, User, Message
 from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
-    UserBalanceUpdateSerializer
+    UserBalanceUpdateSerializer, UserMessageSerializer
 from .serializers import UserLoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -129,3 +129,15 @@ class UserBalanceUpdateView(UpdateAPIView):
             'message': 'Balance updated successfully',
             'new_balance': str(user.balance)
         }, status=status.HTTP_200_OK)
+
+
+@extend_schema(tags=['User'])
+class UserMessageView(ListAPIView):
+    serializer_class = UserMessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def get_queryset(self):
+        return Message.objects.filter(receiver=self.get_object())
