@@ -88,20 +88,19 @@ class UserMessageSerializer(serializers.ModelSerializer):
 
 
 class UserWishlistSerializer(serializers.Serializer):
-    user = UserProfileSerializer()
     property = PropertySerializer()
 
 
 class UserTariffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tariff
-        fields = '__all__'
+        fields = ['id', 'name', 'price', 'description', 'duration_days', 'status', 'label', 'created_at']
 
 
 class UserTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields = '__all__'
+        fields = ['id', 'amount', 'created_at']
 
 
 class SendMessageSerializer(serializers.Serializer):
