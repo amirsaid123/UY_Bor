@@ -1,11 +1,12 @@
 import random
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import PhoneVerification, User
-from .serializers import PhoneNumberSerializer, UserProfileSerializer
+from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer
 from .serializers import UserLoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -89,3 +90,12 @@ class UserProfileView(RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+@extend_schema(tags=['User'])
+class UserUpdateView(UpdateAPIView):
+    serializer_class = UserUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
