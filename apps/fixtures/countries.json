@@ -1,1 +1,10 @@
-[{"model": "apps.country", "pk": 1, "fields": {"name": "Uzbekistan", "slug": "uzbekistan"}}]
+[
+  {
+    "model": "apps.country",
+    "pk": 1,
+    "fields": {
+      "name": "Uzbekistan",
+      "slug": "uzbekistan"
+    }
+  }
+]
