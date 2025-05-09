@@ -31,9 +31,7 @@ class SendCodeView(CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
-@extend_schema(
-    tags=["Authentication"],
-)
+@extend_schema(tags=["Authentication"])
 class UserLoginView(GenericAPIView):
     serializer_class = UserLoginSerializer
 
