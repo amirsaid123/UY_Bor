@@ -1,7 +1,8 @@
 from django.urls import path
 
 from apps.views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView, \
-    UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView, UserTariffView
+    UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView, UserTariffView, UserTransactionView, \
+    UserSendMesageView
 
 urlpatterns = [
     path('auth/sendcode/', SendCodeView.as_view(), name='user_register'),
@@ -17,4 +18,6 @@ urlpatterns += [
     path('user/profile/wishlist/', UserWishlistView.as_view(), name='user_wishlist'),
     path('user/profile/listings/', UserPropertyView.as_view(), name='user_listings'),
     path('user/profile/tariff/', UserTariffView.as_view(), name='user_tariff'),
+    path('user/profile/transactions/', UserTransactionView.as_view(), name='user_transactions'),
+    path('user/profile/send/message/', UserSendMesageView.as_view(), name='user_send_message'),
 ]

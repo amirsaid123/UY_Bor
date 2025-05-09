@@ -1,6 +1,6 @@
 import re
 from rest_framework import serializers
-from apps.models import User, Message, Property, Tariff
+from apps.models import User, Message, Property, Tariff, Transaction
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -75,3 +75,12 @@ class UserTariffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tariff
         fields = '__all__'
+
+class UserTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = '__all__'
+
+class SendMessageSerializer(serializers.Serializer):
+    to_user = serializers.IntegerField()
+    message = serializers.CharField(max_length=1000)

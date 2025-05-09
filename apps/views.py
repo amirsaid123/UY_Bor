@@ -9,9 +9,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .filters import PropertyFilter, WishlistFilter
-from .models import PhoneVerification, User, Message, Wishlist, Property, Tariff
+from .models import PhoneVerification, User, Wishlist, Property, Tariff, Transaction
 from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
-    UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer, PropertySerializer, UserTariffSerializer
+    UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer, PropertySerializer, \
+    UserTariffSerializer, UserTransactionSerializer, SendMessageSerializer
 from .serializers import UserLoginSerializer
 
 
@@ -129,7 +130,7 @@ class UserBalanceUpdateView(UpdateAPIView):
 
         user.balance += serializer.validated_data['amount']
         user.save()
-
+        Transaction.objects.create(user=user, amount=serializer.validated_data['amount'])
         return Response({
             'message': 'Balance updated successfully',
             'new_balance': str(user.balance)
@@ -145,7 +146,7 @@ class UserMessageView(ListAPIView):
         return self.request.user
 
     def get_queryset(self):
-        return Message.objects.filter(receiver=self.get_object())
+        return self.get_object().messages.all()
 
 
 @extend_schema(
@@ -284,8 +285,9 @@ class UserWishlistView(ListAPIView):
                 queryset = queryset.order_by('created_at')
         return queryset
 
+
 @extend_schema(
-    tags=["User"],)
+    tags=["User"])
 class UserTariffView(ListAPIView):
     serializer_class = UserTariffSerializer
     permission_classes = [IsAuthenticated]
@@ -295,3 +297,37 @@ class UserTariffView(ListAPIView):
 
     def get_queryset(self):
         return Tariff.objects.filter(user=self.get_object())
+
+
+@extend_schema(
+    tags=["User"])
+class UserTransactionView(ListAPIView):
+    serializer_class = UserTransactionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def get_queryset(self):
+        return self.get_object().transactions.all()
+
+
+@extend_schema(tags=["User"])
+class UserSendMesageView(CreateAPIView):
+    serializer_class = SendMessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = self.get_object()
+        user.messages.create(
+            sender=user,
+            receiver=serializer.validated_data['to_user'],
+            message=serializer.validated_data['message']
+        )
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
