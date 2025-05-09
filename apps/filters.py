@@ -37,7 +37,7 @@ class SearchFilter(django_filters.FilterSet):
 
     room = django_filters.NumberFilter(field_name="room", lookup_expr='exact')
     floor = django_filters.NumberFilter(field_name="floor", lookup_expr='exact')
-    repair = django_filters.NumberFilter(field_name="repair", lookup_expr='exact')
+    repair = django_filters.CharFilter(field_name="repair", lookup_expr='exact')
     commissioning_date = django_filters.DateFilter(field_name="commissioning_date", lookup_expr='exact')
     min_area = django_filters.NumberFilter(field_name="area", lookup_expr='gte')
     max_area = django_filters.NumberFilter(field_name="area", lookup_expr='lte')
