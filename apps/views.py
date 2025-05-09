@@ -211,6 +211,13 @@ class UserPropertyView(ListAPIView):
             location=OpenApiParameter.QUERY,
             description="ID of the property (exact match)",
         ),
+        OpenApiParameter(
+            name="ordering",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            description="Sort results by: highest_price, lowest_price, less_viewed, popular, newest, oldest",
+            enum=["highest_price", "lowest_price", "less_viewed", "popular", "newest", "oldest"],
+        ),
     ],
 )
 class UserPropertyFilter(ListAPIView):
@@ -218,6 +225,22 @@ class UserPropertyFilter(ListAPIView):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = PropertyFilter
+    ordering = ['-created_at']
 
     def get_queryset(self):
-        return Property.objects.filter(user=self.request.user)
+        queryset = Property.objects.filter(user=self.request.user)
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering:
+            if ordering == 'highest_price':
+                queryset = queryset.order_by('-price')
+            elif ordering == 'lowest_price':
+                queryset = queryset.order_by('price')
+            elif ordering == 'less_viewed':
+                queryset = queryset.order_by('views')
+            elif ordering == 'popular':
+                queryset = queryset.order_by('-views')
+            elif ordering == 'newest':
+                queryset = queryset.order_by('-created_at')
+            elif ordering == 'oldest':
+                queryset = queryset.order_by('created_at')
+        return queryset
