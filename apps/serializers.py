@@ -8,6 +8,7 @@ class PropertySerializer(serializers.ModelSerializer):
         model = Property
         fields = '__all__'
 
+
 class PhoneNumberSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=15)
 
@@ -34,10 +35,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'first_name', 'last_name', 'phone_number', 'email', 'avatar', 'role']
 
+
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'avatar']
+
 
 class UserBalanceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,24 +65,29 @@ class UserBalanceUpdateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Enter a valid 4-digit password.")
         return value
 
+
 class UserMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = '__all__'
 
+
 class UserWishlistSerializer(serializers.Serializer):
     user = UserProfileSerializer()
     property = PropertySerializer()
+
 
 class UserTariffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tariff
         fields = '__all__'
 
+
 class UserTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = '__all__'
+
 
 class SendMessageSerializer(serializers.Serializer):
     to_user = serializers.IntegerField()

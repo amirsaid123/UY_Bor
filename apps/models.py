@@ -132,7 +132,7 @@ class Wishlist(models.Model):
 class Message(models.Model):
     receiver = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='sent_messages', null=True,
-                                  blank=True)
+                               blank=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -233,6 +233,7 @@ class Tariff(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.price} UZS for {self.duration_days} days"
+
 
 class StaticPage(models.Model):
     title = models.CharField(max_length=255)

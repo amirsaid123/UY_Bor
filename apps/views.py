@@ -286,8 +286,7 @@ class UserWishlistView(ListAPIView):
         return queryset
 
 
-@extend_schema(
-    tags=["User"])
+@extend_schema(tags=["User"])
 class UserTariffView(ListAPIView):
     serializer_class = UserTariffSerializer
     permission_classes = [IsAuthenticated]
@@ -296,11 +295,10 @@ class UserTariffView(ListAPIView):
         return self.request.user
 
     def get_queryset(self):
-        return Tariff.objects.filter(user=self.get_object())
+        return self.get_object().tariffs.all()
 
 
-@extend_schema(
-    tags=["User"])
+@extend_schema(tags=["User"])
 class UserTransactionView(ListAPIView):
     serializer_class = UserTransactionSerializer
     permission_classes = [IsAuthenticated]
