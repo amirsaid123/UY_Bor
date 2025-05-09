@@ -56,10 +56,6 @@ class SearchPropertyFilter(django_filters.FilterSet):
     max_views = django_filters.NumberFilter(field_name="views", lookup_expr='lte')
     min_saves = django_filters.NumberFilter(field_name="saves", lookup_expr='gte')
     max_saves = django_filters.NumberFilter(field_name="saves", lookup_expr='lte')
-    min_latitude = django_filters.NumberFilter(field_name="latitude", lookup_expr='gte')
-    max_latitude = django_filters.NumberFilter(field_name="latitude", lookup_expr='lte')
-    min_longitude = django_filters.NumberFilter(field_name="longitude", lookup_expr='gte')
-    max_longitude = django_filters.NumberFilter(field_name="longitude", lookup_expr='lte')
 
     # ForeignKey filters
     residential_name = django_filters.CharFilter(field_name="residential_complex__name", lookup_expr='icontains')
@@ -68,7 +64,6 @@ class SearchPropertyFilter(django_filters.FilterSet):
     metro = django_filters.CharFilter(field_name="metro__name", lookup_expr='icontains')
     district = django_filters.CharFilter(field_name="district__name", lookup_expr='icontains')
     country = django_filters.CharFilter(field_name="country__name", lookup_expr='icontains')
-    user = django_filters.CharFilter(field_name="user__username", lookup_expr='exact')
 
     # ManyToManyField filter
     amenities = django_filters.CharFilter(method='filter_amenities')
@@ -88,9 +83,9 @@ class SearchPropertyFilter(django_filters.FilterSet):
             'search', 'name', 'description', 'type', 'category', 'building_material',
             'renovation_needed', 'repair', 'label', 'residential_type', 'status',
             'room', 'floor', 'min_area', 'max_area', 'min_price', 'max_price',
-            'min_views', 'max_views', 'min_saves', 'max_saves', 'min_latitude',
-            'max_latitude', 'min_longitude', 'max_longitude', 'residential_name',
-            'city', 'region', 'metro', 'district', 'country', 'user', 'amenities',
+            'min_views', 'max_views', 'min_saves', 'max_saves',
+            'residential_name',
+            'city', 'region', 'metro', 'district', 'country', 'amenities',
             'commissioning_date', 'min_commissioning_date', 'max_commissioning_date',
             'created_after', 'created_before', 'updated_after', 'updated_before'
         ]
