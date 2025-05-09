@@ -1,11 +1,11 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
 from rest_framework.permissions import AllowAny
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
-from apps.Serializers.filter_serializers import SearchFilterSerializer
+from apps.Serializers.filter_serializers import PropertySerializer
 from apps.filters import SearchPropertyFilter
 from apps.models import Property
 
@@ -97,7 +97,7 @@ from apps.models import Property
     ],
 )
 class SearchProperty(ListAPIView):
-    serializer_class = SearchFilterSerializer
+    serializer_class = PropertySerializer
     permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = SearchPropertyFilter
@@ -121,3 +121,15 @@ class SearchProperty(ListAPIView):
             elif ordering == 'oldest':
                 queryset = queryset.order_by('created_at')
         return queryset
+
+
+@extend_schema(
+    tags=["Property"],
+)
+class PropertyView(RetrieveAPIView):
+    serializer_class = PropertySerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'id'
+
+    def get_object(self):
+        return Property.objects.get(id=self.kwargs['pk'])

@@ -2,7 +2,7 @@ from django.urls import path
 from apps.Views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView, \
     UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView, UserTariffView, UserTransactionView, \
     UserSendMesageView
-from apps.Views.filter_views import SearchProperty
+from apps.Views.filter_views import SearchProperty, PropertyView
 
 urlpatterns = [
     path('auth/sendcode/', SendCodeView.as_view(), name='user_register'),
@@ -25,4 +25,5 @@ urlpatterns += [
 
 urlpatterns += [
     path('search/', SearchProperty.as_view(), name='search_property'),
+    path('property/<int:pk>', PropertyView.as_view(), name='property'),
 ]
