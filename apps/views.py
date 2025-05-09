@@ -6,7 +6,8 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import PhoneVerification, User
-from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer
+from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
+    UserBalanceUpdateSerializer
 from .serializers import UserLoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -100,9 +101,23 @@ class UserUpdateView(UpdateAPIView):
         return self.request.user
 
 @extend_schema(tags=['User'])
-class UserBalanceView(RetrieveAPIView):
-    serializer_class = UserBalanceSerializer
+class UserBalanceView(UpdateAPIView):
+    serializer_class = UserBalanceUpdateSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = self.get_object()
+
+        user.balance += serializer.validated_data['amount']
+        user.save()
+
+        return Response({
+            'message': 'Balance updated successfully',
+            'new_balance': str(user.balance)
+        }, status=status.HTTP_200_OK)
