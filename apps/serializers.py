@@ -1,7 +1,12 @@
 import re
 from rest_framework import serializers
-from apps.models import User, Message
+from apps.models import User, Message, Property
 
+
+class PropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
+        fields = '__all__'
 
 class PhoneNumberSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=15)
@@ -40,8 +45,6 @@ class UserBalanceSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'last_name', 'phone_number', 'balance']
 
 
-
-
 class UserBalanceUpdateSerializer(serializers.Serializer):
     card_number = serializers.CharField(max_length=16)
     password = serializers.CharField(max_length=4)
@@ -63,3 +66,7 @@ class UserMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = '__all__'
+
+class UserWishlistSerializer(serializers.Serializer):
+    user = UserProfileSerializer()
+    property = PropertySerializer()

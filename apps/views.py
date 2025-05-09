@@ -5,9 +5,9 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIVie
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import PhoneVerification, User, Message
+from .models import PhoneVerification, User, Message, Wishlist
 from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
-    UserBalanceUpdateSerializer, UserMessageSerializer
+    UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer
 from .serializers import UserLoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -141,3 +141,14 @@ class UserMessageView(ListAPIView):
 
     def get_queryset(self):
         return Message.objects.filter(receiver=self.get_object())
+
+@extend_schema(tags=['User'])
+class UserWishlistView(ListAPIView):
+    serializer_class = UserWishlistSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def get_queryset(self):
+        return Wishlist.objects.filter(user=self.get_object())
