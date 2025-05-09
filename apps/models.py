@@ -229,6 +229,7 @@ class Tariff(models.Model):
     status = models.CharField(max_length=10, choices=Property.Status.choices, default=Property.Status.ACTIVE)
     label = models.CharField(max_length=10, choices=Property.Label.choices, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='tariffs', null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} - {self.price} UZS for {self.duration_days} days"

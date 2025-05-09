@@ -1,6 +1,6 @@
 import re
 from rest_framework import serializers
-from apps.models import User, Message, Property
+from apps.models import User, Message, Property, Tariff
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -71,3 +71,7 @@ class UserWishlistSerializer(serializers.Serializer):
     user = UserProfileSerializer()
     property = PropertySerializer()
 
+class UserTariffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tariff
+        fields = '__all__'

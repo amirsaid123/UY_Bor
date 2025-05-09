@@ -9,9 +9,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .filters import PropertyFilter, WishlistFilter
-from .models import PhoneVerification, User, Message, Wishlist, Property
+from .models import PhoneVerification, User, Message, Wishlist, Property, Tariff
 from .serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
-    UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer, PropertySerializer
+    UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer, PropertySerializer, UserTariffSerializer
 from .serializers import UserLoginSerializer
 
 
@@ -283,3 +283,15 @@ class UserWishlistView(ListAPIView):
             elif ordering == 'oldest':
                 queryset = queryset.order_by('created_at')
         return queryset
+
+@extend_schema(
+    tags=["User"],)
+class UserTariffView(ListAPIView):
+    serializer_class = UserTariffSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def get_queryset(self):
+        return Tariff.objects.filter(user=self.get_object())
