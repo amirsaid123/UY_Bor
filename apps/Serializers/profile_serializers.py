@@ -1,5 +1,7 @@
 import re
+
 from rest_framework import serializers
+
 from apps.models import User, Message, Property, Tariff, Transaction, Image, Amenity
 
 
@@ -106,6 +108,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
 class SendMessageSerializer(serializers.Serializer):
     to_user = serializers.IntegerField()
     message = serializers.CharField(max_length=1000)
+
 
 class DeactivatePropertySerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,8 +1,7 @@
 from django.urls import path
-from apps.Views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView, \
-    UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView, UserTariffView, UserTransactionView, \
-    UserSendMesageView, UserDeactivatePropertyView
-from apps.Views.filter_views import SearchProperty, PropertyView
+from apps.Views import *
+from apps.Views.filter_views import *
+from apps.Views.home_page_views import *
 
 urlpatterns = [
     path('auth/sendcode/', SendCodeView.as_view(), name='user_register'),
@@ -23,8 +22,15 @@ urlpatterns += [
     path('user/profile/listings/deactivate/<int:pk>', UserDeactivatePropertyView.as_view(), name='deactivate_property')
 ]
 
-
 urlpatterns += [
     path('search/', SearchProperty.as_view(), name='search_property'),
     path('property/<int:pk>', PropertyView.as_view(), name='property'),
+]
+
+urlpatterns += [
+    path('vip/properties', VipPropertyView.as_view(), name='vip_property'),
+    path('residential/complex/', ResidentialComplexView.as_view(), name='residential_complex'),
+    path('videos/', VideoView.as_view(), name='videos'),
+    path('blogs/', BlogView.as_view(), name='blogs'),
+    path('static/pages', StaticPageView.as_view(), name='static_pages'),
 ]
