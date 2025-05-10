@@ -1,0 +1,20 @@
+[
+  {
+    "model": "apps.staticpage",
+    "pk": 1,
+    "fields": {
+      "title": "About Us",
+      "slug": "about-us",
+      "content": "Welcome to RealEstateHub – your trusted partner in property search and listing across Uzbekistan.\n\nWe connect buyers, sellers, and renters with the perfect properties, whether you're looking for a cozy apartment in Tashkent or a spacious villa in Samarkand. Our mission is to make real estate simple, transparent, and accessible for everyone.\n\nWith a team of dedicated professionals and modern technology, we ensure a seamless experience from browsing to buying. We believe in honest service, verified listings, and supporting our community.\n\nThank you for choosing us to be part of your journey."
+    }
+  },
+  {
+    "model": "apps.staticpage",
+    "pk": 2,
+    "fields": {
+      "title": "Terms and Conditions",
+      "slug": "terms-and-conditions",
+      "content": "By using our website and services, you agree to the following terms and conditions:\n\n1. **User Conduct**: You agree not to upload false information, offensive content, or misuse the platform in any way.\n2. **Account Responsibility**: You are responsible for maintaining the confidentiality of your account.\n3. **Content Ownership**: All listings and media uploaded remain the property of their respective owners. We reserve the right to remove content that violates our policies.\n4. **Service Availability**: We strive to ensure platform uptime but do not guarantee uninterrupted access.\n5. **Modifications**: These terms may be updated from time to time. Continued use of the service implies acceptance of any changes.\n\nIf you do not agree to these terms, please discontinue use of the platform."
+    }
+  }
+]
