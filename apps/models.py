@@ -149,6 +149,7 @@ class Blog(Model):
     slug = SlugField(unique=True, blank=True)
     description = TextField(null=True, blank=True)
     image = ImageField(upload_to='blogs', blank=True)
+    created_at = DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

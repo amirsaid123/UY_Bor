@@ -46,3 +46,8 @@ class WishlistSerializer(ModelSerializer):
     class Meta:
         model = Wishlist
         fields = ['id', 'user', 'property']
+
+class BlogSerializer(ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = ['id', 'title', 'slug', 'description', 'image', 'created_at']
