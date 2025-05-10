@@ -62,6 +62,12 @@ class Property(models.Model):
         REQUIRED = 'required', 'Needs renovation'
         BLACK_PLASTER = 'black_plaster', 'Bare walls (Black plaster)'
 
+    class Repair(models.TextChoices):
+        AUTHOR = 'author', 'Author design'
+        DECORATED = 'decorated', 'Decorated'
+        REQUIRES_DECORATION = 'requires_decoration', 'Requires decoration'
+        WITHOUT_DECORATION = 'without_decoration', 'Without decoration'
+
     class Type(models.TextChoices):
         SALE = 'sale', 'Sale'
         RENT = 'rent', 'Rent'
@@ -95,6 +101,7 @@ class Property(models.Model):
     type = models.CharField(max_length=10, choices=Type.choices)
     category = models.ForeignKey('apps.Category', on_delete=models.CASCADE, related_name='properties')
     label = models.CharField(max_length=10, choices=Label.choices, null=True, blank=True)
+    repair = models.CharField(max_length=100, choices=Repair.choices, null=True, blank=True)
 
     residential_complex = models.ForeignKey('apps.ResidentialComplex', on_delete=CASCADE, null=True, blank=True)
     residential_type = models.CharField(max_length=100, choices=ResidentialType.choices, null=True, blank=True)
@@ -131,11 +138,20 @@ class Wishlist(models.Model):
 
 
 class Message(models.Model):
-    user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='messages')
-    from_user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='sent_messages', null=True,
-                                  blank=True)
-    text = models.TextField()
+    receiver = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='sent_messages', null=True,
+                               blank=True)
+    message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class PhoneVerification(models.Model):
+    phone_number = models.CharField(max_length=15, unique=True)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.phone_number} - {self.code}"
 
 
 class Transaction(models.Model):
@@ -221,9 +237,11 @@ class Tariff(models.Model):
     status = models.CharField(max_length=10, choices=Property.Status.choices, default=Property.Status.ACTIVE)
     label = models.CharField(max_length=10, choices=Property.Label.choices, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='tariffs', null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} - {self.price} UZS for {self.duration_days} days"
+
 
 class StaticPage(models.Model):
     title = models.CharField(max_length=255)

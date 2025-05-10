@@ -1,0 +1,102 @@
+[
+  {
+    "model": "apps.message",
+    "pk": 1,
+    "fields": {
+      "receiver": 1,
+      "sender": 4,
+      "message": "Hello! Just checking in.",
+      "created_at": "2025-05-09T07:37:22.019Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 2,
+    "fields": {
+      "receiver": 2,
+      "sender": 3,
+      "message": "Are you available for a call?",
+      "created_at": "2025-05-09T07:37:22.022Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 3,
+    "fields": {
+      "receiver": 4,
+      "sender": 3,
+      "message": "Let's meet tomorrow.",
+      "created_at": "2025-05-09T07:37:22.023Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 4,
+    "fields": {
+      "receiver": 3,
+      "sender": 2,
+      "message": "Don't forget the documents.",
+      "created_at": "2025-05-09T07:37:22.024Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 5,
+    "fields": {
+      "receiver": 3,
+      "sender": 2,
+      "message": "Congrats on the new project!",
+      "created_at": "2025-05-09T07:37:22.026Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 6,
+    "fields": {
+      "receiver": 4,
+      "sender": 3,
+      "message": "Ping me when you're free.",
+      "created_at": "2025-05-09T07:37:22.027Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 7,
+    "fields": {
+      "receiver": 2,
+      "sender": 3,
+      "message": "We should grab coffee.",
+      "created_at": "2025-05-09T07:37:22.028Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 8,
+    "fields": {
+      "receiver": 4,
+      "sender": 3,
+      "message": "Deadline is approaching fast.",
+      "created_at": "2025-05-09T07:37:22.029Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 9,
+    "fields": {
+      "receiver": 4,
+      "sender": 3,
+      "message": "Check your inbox, please.",
+      "created_at": "2025-05-09T07:37:22.030Z"
+    }
+  },
+  {
+    "model": "apps.message",
+    "pk": 10,
+    "fields": {
+      "receiver": 1,
+      "sender": 3,
+      "message": "Let me know your thoughts.",
+      "created_at": "2025-05-09T07:37:22.031Z"
+    }
+  }
+]
