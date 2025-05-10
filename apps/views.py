@@ -26,3 +26,8 @@ class UserPropertyListView(ListAPIView):
 
     def get_queryset(self):
         return Property.objects.filter(user=self.request.user)
+
+
+class VIPPropertyListView(ListAPIView):
+    queryset = Property.objects.filter(label='VIP')
+    serializer_class = PropertySerializer
