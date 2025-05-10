@@ -1,13 +1,15 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from apps.Serializers.filter_serializers import PropertySerializer
+from apps.Serializers.filter_serializers import PropertySerializer, MessageSerializer
 from apps.filters import SearchPropertyFilter
-from apps.models import Property
+from apps.models import Property, Message
 
 
 @extend_schema(
@@ -133,3 +135,15 @@ class PropertyView(RetrieveAPIView):
 
     def get_object(self):
         return Property.objects.get(id=self.kwargs['pk'])
+
+
+@extend_schema(
+    tags=["UserMessages"],
+)
+class UserMessagesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        messages = Message.objects.filter(sender=request.user) | Message.objects.filter(receiver=request.user)
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data)
