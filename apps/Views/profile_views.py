@@ -1,4 +1,6 @@
 import random
+
+from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -7,12 +9,14 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIVie
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework_simplejwt.tokens import RefreshToken
 from apps.filters import PropertyFilter, WishlistFilter
 from apps.models import PhoneVerification, User, Wishlist, Property, Transaction
 from apps.Serializers import PhoneNumberSerializer, UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
     UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer, PropertySerializer, \
-    UserTariffSerializer, UserTransactionSerializer, SendMessageSerializer, UserLoginSerializer
+    UserTariffSerializer, UserTransactionSerializer, SendMessageSerializer, UserLoginSerializer, \
+    DeactivatePropertySerializer
 
 
 @extend_schema(tags=["Authentication"])
@@ -328,3 +332,44 @@ class UserSendMesageView(CreateAPIView):
         )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@extend_schema(
+    tags=["User"],
+    # parameters=[
+    #     OpenApiParameter(
+    #         name="id",
+    #         type=int,
+    #         location=OpenApiParameter.PATH,
+    #         description="ID of the property to deactivate",
+    #         required=True,
+    #     ),
+    # ],
+    # responses={
+    #     200: PropertySerializer,
+    #     404: {"description": "Property not found or does not belong to the user"},
+    #     400: {"description": "Property is already inactive"},
+    # },
+    # description="Deactivate a property by setting its status to 'inactive'. Only the property owner can deactivate it.",
+)
+class UserDeactivatePropertyView(UpdateAPIView):
+    serializer_class = DeactivatePropertySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        try:
+            return self.request.user.properties.get(pk=self.kwargs['pk'])
+        except Property.DoesNotExist:
+            raise Http404("Property not found or does not belong to the user")
+
+    def update(self, request, *args, **kwargs):
+        property_obj = self.get_object()
+        if property_obj.status == Property.Status.INACTIVE:
+            return Response(
+                {"detail": "Property is already inactive"},
+                status=HTTP_400_BAD_REQUEST
+            )
+        property_obj.status = Property.Status.INACTIVE
+        property_obj.save()
+        serializer = PropertySerializer(property_obj)
+        return Response(serializer.data, status=HTTP_200_OK)

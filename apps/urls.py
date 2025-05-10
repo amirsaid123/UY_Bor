@@ -1,7 +1,7 @@
 from django.urls import path
 from apps.Views import SendCodeView, UserLoginView, UserProfileView, UserUpdateView, UserBalanceView, \
     UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView, UserTariffView, UserTransactionView, \
-    UserSendMesageView
+    UserSendMesageView, UserDeactivatePropertyView
 from apps.Views.filter_views import SearchProperty, PropertyView
 
 urlpatterns = [
@@ -20,6 +20,7 @@ urlpatterns += [
     path('user/profile/tariff/', UserTariffView.as_view(), name='user_tariff'),
     path('user/profile/transactions/', UserTransactionView.as_view(), name='user_transactions'),
     path('user/profile/send/message/', UserSendMesageView.as_view(), name='user_send_message'),
+    path('user/profile/listings/deactivate/<int:pk>', UserDeactivatePropertyView.as_view(), name='deactivate_property')
 ]
 
 

@@ -106,3 +106,8 @@ class UserTransactionSerializer(serializers.ModelSerializer):
 class SendMessageSerializer(serializers.Serializer):
     to_user = serializers.IntegerField()
     message = serializers.CharField(max_length=1000)
+
+class DeactivatePropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
+        fields = ['id']
