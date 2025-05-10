@@ -334,24 +334,7 @@ class UserSendMesageView(CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@extend_schema(
-    tags=["User"],
-    # parameters=[
-    #     OpenApiParameter(
-    #         name="id",
-    #         type=int,
-    #         location=OpenApiParameter.PATH,
-    #         description="ID of the property to deactivate",
-    #         required=True,
-    #     ),
-    # ],
-    # responses={
-    #     200: PropertySerializer,
-    #     404: {"description": "Property not found or does not belong to the user"},
-    #     400: {"description": "Property is already inactive"},
-    # },
-    # description="Deactivate a property by setting its status to 'inactive'. Only the property owner can deactivate it.",
-)
+@extend_schema(tags=["User"])
 class UserDeactivatePropertyView(UpdateAPIView):
     serializer_class = DeactivatePropertySerializer
     permission_classes = [IsAuthenticated]
