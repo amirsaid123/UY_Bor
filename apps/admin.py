@@ -8,7 +8,7 @@ from .models import (
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'phone_number', 'first_name', 'last_name', 'is_active', 'is_staff')
+    list_display = ('id', 'phone_number', 'first_name', 'last_name', 'role',  'is_active', 'is_staff')
     search_fields = ('phone_number', 'email', 'first_name', 'last_name')
 
 
