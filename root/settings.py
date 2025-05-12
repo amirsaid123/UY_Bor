@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework_simplejwt',
     'django_filters',
+    'jazzmin',
 ]
 
 MIDDLEWARE = [
