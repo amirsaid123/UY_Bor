@@ -27,7 +27,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=15, unique=True)
-    email = models.CharField(max_length=100, unique=True, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars', blank=True)
     organization = models.CharField(max_length=255, blank=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -150,7 +149,7 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.sender} - {self.receiver}"
+        return f"Sender {self.sender} - Receiver {self.receiver}"
 
 
 class PhoneVerification(models.Model):

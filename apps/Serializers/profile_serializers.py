@@ -50,13 +50,13 @@ class UserLoginSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'phone_number', 'email', 'avatar', 'role']
+        fields = ['id', 'first_name', 'last_name', 'phone_number', 'avatar', 'role']
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'avatar']
+        fields = ['first_name', 'last_name', 'avatar']
 
 
 class UserBalanceSerializer(serializers.ModelSerializer):

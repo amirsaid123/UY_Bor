@@ -19,13 +19,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'jazzmin',
     'django.contrib.admin',
     'apps',
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
     'django_filters',
-    'jazzmin',
 ]
 
 MIDDLEWARE = [
@@ -165,3 +165,4 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
