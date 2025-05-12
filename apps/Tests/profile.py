@@ -168,6 +168,14 @@ class TestUserProfileView:
         assert response.status_code == status.HTTP_200_OK
         print(response.data)
 
+    def test_user_wishlist_update(self, auth_client, wishlist, property):
+        url = reverse('user_wishlist_update', kwargs={'pk': property.id})
+        response = auth_client.patch(url, content_type='application/json')
+        assert response.status_code == status.HTTP_200_OK
+        print(response.data)
 
-    def test_user_wishlist_update(self):
-        pass
+    def test_user_property_delete(self, auth_client, property):
+        url = reverse('user_property_delete', kwargs={'pk': property.id})
+        response = auth_client.delete(url, content_type='application/json')
+        assert response.status_code == status.HTTP_200_OK
+        print(response.data)

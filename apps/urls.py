@@ -18,8 +18,8 @@ urlpatterns += [
     path('user/profile/transactions/', UserTransactionView.as_view(), name='user_transactions'),
     path('user/profile/send/message/', UserSendMesageView.as_view(), name='user_send_message'),
     path('user/profile/listings/deactivate/<int:pk>', UserDeactivatePropertyView.as_view(), name='deactivate_property'),
-    path('user/update/wishlist/<int:pk>', UserUpdateWishlistView.as_view(), name='update_wishlist'),
-    path('user/delete/property/<int:pk>', UserDeletePropertyView.as_view(), name='delete_property' )
+    path('user/update/wishlist/<int:pk>', UserUpdateWishlistView.as_view(), name='user_wishlist_update'),
+    path('user/delete/property/<int:pk>', UserDeletePropertyView.as_view(), name='user_property_delete' )
 ]
 
 urlpatterns += [
