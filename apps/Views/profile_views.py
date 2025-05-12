@@ -4,13 +4,14 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, ListAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED
 from apps.Serializers import UserProfileSerializer, UserUpdateSerializer, UserBalanceSerializer, \
     UserBalanceUpdateSerializer, UserMessageSerializer, UserWishlistSerializer, PropertySerializer, \
-    UserTariffSerializer, UserTransactionSerializer, SendMessageSerializer, DeactivatePropertySerializer
+    UserTariffSerializer, UserTransactionSerializer, SendMessageSerializer, DeactivatePropertySerializer, \
+    UserUpdateWishlistSerializer, DeletePropertySerializer
 from apps.filters import PropertyFilter, WishlistFilter
 from apps.models import Wishlist, Property, Transaction
 
@@ -280,3 +281,42 @@ class UserDeactivatePropertyView(UpdateAPIView):
         property_obj.save()
         serializer = PropertySerializer(property_obj)
         return Response(serializer.data, status=HTTP_200_OK)
+
+
+@extend_schema(tags=["User"])
+class UserUpdateWishlistView(UpdateAPIView):
+    serializer_class = UserUpdateWishlistSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return Property.objects.get(pk=self.kwargs['pk'])
+
+    def update(self, request, *args, **kwargs):
+        property_obj = self.get_object()
+        user = request.user
+
+        wishlist_entry, created = Wishlist.objects.get_or_create(user=user, property=property_obj)
+
+        if not created:
+            wishlist_entry.delete()
+            return Response({"detail": "Removed from wishlist."}, status=HTTP_200_OK)
+
+        return Response({"detail": "Added to wishlist."}, status=HTTP_201_CREATED)
+
+
+@extend_schema(tags=["User"])
+class UserDeletePropertyView(DestroyAPIView):
+    serializer_class = DeletePropertySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.properties.get(pk=self.kwargs['pk'])
+
+
+    def delete(self, request, *args, **kwargs):
+        property_obj = self.get_object()
+        property_obj.delete()
+        return Response({"detail": "Property deleted successfully."}, status=HTTP_200_OK)
+
+
+

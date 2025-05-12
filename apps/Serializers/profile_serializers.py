@@ -92,6 +92,8 @@ class UserMessageSerializer(serializers.ModelSerializer):
 class UserWishlistSerializer(serializers.Serializer):
     property = PropertySerializer()
 
+class UserUpdateWishlistSerializer(serializers.Serializer):
+    property_id = serializers.IntegerField()
 
 class UserTariffSerializer(serializers.ModelSerializer):
     class Meta:
@@ -111,6 +113,11 @@ class SendMessageSerializer(serializers.Serializer):
 
 
 class DeactivatePropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
+        fields = ['id']
+
+class DeletePropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
         fields = ['id']

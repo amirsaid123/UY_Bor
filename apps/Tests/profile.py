@@ -167,3 +167,7 @@ class TestUserProfileView:
         response = auth_client.get(url, content_type='application/json')
         assert response.status_code == status.HTTP_200_OK
         print(response.data)
+
+
+    def test_user_wishlist_update(self):
+        pass
