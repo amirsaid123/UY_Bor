@@ -126,6 +126,10 @@ class Property(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = "Property"
+        verbose_name_plural = "Properties"
+
     def __str__(self):
         return self.name
 
@@ -134,6 +138,8 @@ class Wishlist(models.Model):
     property = models.ForeignKey('apps.Property', on_delete=models.CASCADE, related_name='wishlist')
     user = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='wishlist')
 
+    def __str__(self):
+        return f"{self.user} - {self.property}"
 
 class Message(models.Model):
     receiver = models.ForeignKey('apps.User', on_delete=models.CASCADE, related_name='messages')
@@ -141,6 +147,9 @@ class Message(models.Model):
                                blank=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.sender} - {self.receiver}"
 
 
 class PhoneVerification(models.Model):
@@ -157,6 +166,8 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.user} - {self.amount}"
 
 class Blog(models.Model):
     title = models.CharField(max_length=255)
@@ -177,6 +188,8 @@ class Video(models.Model):
     video = models.URLField()
     property = models.ForeignKey('apps.Property', on_delete=models.CASCADE, related_name='videos')
 
+    def __str__(self):
+        return f"Video for {self.property.name}"
 
 class ResidentialComplex(models.Model):
     name = models.CharField(max_length=255)
@@ -198,6 +211,9 @@ class Amenity(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Amenity"
+        verbose_name_plural = "Amenities"
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -218,6 +234,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
 
 class Image(models.Model):
     image = models.ImageField(upload_to='images', blank=True)
@@ -280,6 +299,9 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Country"
+        verbose_name_plural = "Countries"
 
 class Region(models.Model):
     name = models.CharField(max_length=255)
@@ -308,6 +330,9 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "City"
+        verbose_name_plural = "Cities"
 
 class District(models.Model):
     name = models.CharField(max_length=255)
