@@ -1,7 +1,8 @@
 from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
 from rest_framework import status
-from apps.models import User, Transaction
+from apps.models import User, Transaction, Category, City, Region, ResidentialComplex, Property
+from django.test import TestCase
 
 
 class FillBalanceViewTest(APITestCase):
@@ -40,12 +41,12 @@ class FillBalanceViewTest(APITestCase):
 class TransactionTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create(phone_number='+998901234567', email='user@example.com')
 
+        self.user = User.objects.create(phone_number='+998901234567', email='user@example.com')
         self.transaction1 = Transaction.objects.create(user=self.user, amount=150.00)
 
     def test_transaction_list(self):
-        url = reverse('user-transactions')
+        url = reverse('user_transactions')
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -53,3 +54,36 @@ class TransactionTest(APITestCase):
 
         self.assertEqual(response.data[0]['amount'], '150.00')
         self.assertEqual(response.data[0]['user'], self.user.id)
+
+
+# class ResidentialComplexListAPIViewTest(TestCase):
+#     def setUp(self):
+#         self.client = APIClient()
+#
+#         self.user = User.objects.create_user(phone_number="1234567890", password="123")
+#         self.category = Category.objects.create(name="nimadir")
+#         self.city = City.objects.create(name="new york", region=None)
+#         self.region = Region.objects.create(name="nimadir", country=None)
+#         self.res_complex = ResidentialComplex.objects.create(name="qandaydir joy", description="hrtg erghub jrnefndhj")
+#         self.property = Property.objects.create(
+#             name="Spacious 2BHK",
+#             address="123 Park Ave",
+#             building_material="brick",
+#             renovation_needed="euro",
+#             area=120.5,
+#             room=2,
+#             floor=5,
+#             price=200000,
+#             description="A beautiful 2BHK apartment",
+#             type="sale",
+#             category=self.category,
+#             residential_complex=self.res_complex,
+#             city=self.city,
+#             region=self.region,
+#             user=self.user,
+#         )
+#
+#     def test_residential_complex_list_view(self):
+#         response = self.client.get('residential-complex')
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertEqual(response.data[0]['name'], "Luxury Living")

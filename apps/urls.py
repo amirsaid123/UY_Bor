@@ -3,6 +3,7 @@ from apps.Views import SendCodeView, UserLoginView, UserProfileView, UserUpdateV
     UserBalanceUpdateView, UserMessageView, UserWishlistView, UserPropertyView, UserTariffView, UserTransactionView, \
     UserSendMesageView
 from apps.Views.filter_views import SearchProperty, PropertyView
+from apps.Views.home_page_views import ResidentialComplexListAPIView
 
 urlpatterns = [
     path('auth/sendcode/', SendCodeView.as_view(), name='user_register'),
@@ -26,4 +27,5 @@ urlpatterns += [
 urlpatterns += [
     path('search/', SearchProperty.as_view(), name='search_property'),
     path('property/<int:pk>', PropertyView.as_view(), name='property'),
+    path('residential/properties/', ResidentialComplexListAPIView.as_view(), name='residential-complex')
 ]

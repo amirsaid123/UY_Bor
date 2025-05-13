@@ -1,5 +1,7 @@
 import re
 from rest_framework import serializers
+
+from apps.Serializers.filter_serializers import PropertySerializer
 from apps.models import User, Message, Property, Tariff, Transaction, Image, Amenity
 
 
@@ -12,15 +14,6 @@ class ImageSerializer(serializers.ModelSerializer):
 class AmenitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Amenity
-        fields = '__all__'
-
-
-class PropertySerializer(serializers.ModelSerializer):
-    images = ImageSerializer(many=True, read_only=True)
-    amenities = AmenitySerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Property
         fields = '__all__'
 
 
