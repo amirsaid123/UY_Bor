@@ -45,6 +45,7 @@ class TransactionTest(APITestCase):
         self.user = User.objects.create(phone_number='+998901234567', email='user@example.com')
         self.transaction1 = Transaction.objects.create(user=self.user, amount=150.00)
 
+
     def test_transaction_list(self):
         url = reverse('user_transactions')
         response = self.client.get(url)
